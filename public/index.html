@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Carousel</title>
+  <style>
+    #image-container {
+      width: 500px;
+      height: 500px;
+      overflow: hidden;
+      position: relative;
+    }
+    #image-container img {
+      width: 500px;
+      height: 500px;
+      position: absolute;
+      transition: opacity 0.5s;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+  <h1>Image Carousel</h1>
+  <div id="image-container"></div>
+
+  <script>
+    $(document).ready(function() {
+      $.ajax({
+        url: 'http://localhost:3000/images',
+        dataType: 'json',
+        success: function(data) {
+          let images = data.images;
+          console.log(images);
+          console.log(data.images[0] , data.images[1] , data.images[2]);
+          let container = $('#image-container');
+          images.forEach(function(image, index) {
+            let img = $('<img>').attr('src', image).attr('alt', 'Gallery Image').css('opacity', index === 0 ? 1 : 0);
+            console.log(img);
+            container.append(img);
+          });
+
+          let currentIndex = 0;
+          setInterval(function() {
+            currentIndex = (currentIndex + 1) % images.length;
+            console.log(currentIndex);
+            container.find('img').css('opacity', 0).eq(currentIndex).css('opacity', 1);
+          }, 3000);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
